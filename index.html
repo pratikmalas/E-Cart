@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v-on="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+
+<head>
+	<meta charset="utf-8" />
+	<meta name="referrer" content="never" />
+	<title>Vue.js eCart</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<link rel="shortcut icon" type="image/x-icon" href="/public/favicon.ico" />
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,700,800" rel="stylesheet"
+		type="text/css" />
+	<link href="https://fonts.googleapis.com/css?family=Baloo+Bhaina" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" href="/public/style.css" />
+</head>
+
+<body>
+	<div id="app" v-cloak>
+		<div id="loading"><img src="/public/Loading_2.gif" alt=""></div>
+		<div class="header">
+			<div class="container">
+				<div class="title">
+					<img src="public/logo.png" />
+					<h1>Project eCart</h1>
+				</div>
+				<form class="search-bar" v-on:submit.prevent="onSubmit">
+					<input type="text" v-model="search" placeholder="Search for Products" required>
+					<input type="submit" value="Search" class="btn">
+				</form>
+				<p> Try search items like <em>cat, dog, flower</em></p>
+			</div>
+		</div>
+		<div class="main container">
+			<div class="products">
+				<div v-if="loading">Loading...</div>
+				<div v-else>Found {{products.length}} for search items {{lastsearch}}</div>
+
+				<div class="product" v-for="(product,index) in products" :key="index">
+					<!-- <p>{{product}}</p> -->
+					<div>
+						<img class="product-image" v-bind:src="product.thumb" alt="">
+					</div>
+					<div>
+						<h4>{{product.title}} </h4>
+						<p class="product-price"><strong>{{currency( product.price)}}</strong></p>
+						<button class="add-to-cart btn" v-on:click="addToCart(product)">
+							Add To Cart
+						</button>
+						<!-- <button
+							class="add-to-cart btn "
+							v-on:click="removeToCart(product.price)"
+						>
+							Remove To Cart
+						</button> -->
+					</div>
+				</div>
+				<div id="product-list-bottom" >
+					<div v-if="products.length===results.length && results.length>0">No More Items</div>
+				</div>
+			</div>
+			<div class="cart">
+				<h2> Shopping Cart </h2>
+				<transition-group name="fade" tag="ul">
+					<li v-for="item in cart" :key="item.id" class="cart-item">
+						<div class="item-title">{{item.title}}</div>
+						<span class="item-qty"> {{currency( item.price)}} x {{item.qty}}</span>
+						<button class="btn" v-on:click="inc(item)"> + </button>
+						<button class="btn" v-on:click="dec(item)"> - </button>
+					</li>
+				</transition-group>
+				
+				<transition name="fade">
+				<div v-if="total">
+					<div class="cart-total">Total: {{currency(total)}}</div>
+				</div>
+			</transition>
+			<div class="empty-cart" v-if="cart.length===0">No Card Items Found</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Scripts -->
+	<script src="/reload/reload.js"></script>
+	<script type="text/javascript" src="node_modules/vue/dist/vue.global.js"></script>
+	<script type="text/javascript" src="node_modules/scrollmonitor/scrollMonitor.js"></script>
+	<script type="text/javascript" src="public/script.js"></script>
+</body>
+
+</html>
